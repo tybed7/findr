@@ -9,15 +9,21 @@ var app = module.exports = express.Router();
 var jwtCheck = jwt({
   secret: config.secret
 });
-var mysql = require('mysql');
+var pg = require('pg');
 
-var connection = mysql.createConnection({
+pg.defaults.ssl = true;
+var connection = pg.connect(process.env.DATABASE_URL, function(err, client){
+  if(err) console.log("Error: "+err);
+  console.log("Connected to postgres");
+});
+
+/*var connection = mysql.createConnection({
     host: process.env.RDS_HOSTNAME,
     user: process.env.RDS_USERNAME,
     password: process.env.RDS_PASSWORD,
     database: process.env.RDS_DB_NAME,
     port: process.env.RDS_PORT
-});
+});*/
 connection.connect(function(err){
     if(err){
         console.error('error connecting: ' + err.stack);
