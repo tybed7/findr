@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/auth0/nodejs-jwt-authentication-sample.git"
+    "url": "https://github.com/tybed7/findr.git"
   },
   "keywords": [
     "jwt",
@@ -30,6 +30,7 @@
     "express-jwt": "^0.3.1",
     "jsonwebtoken": "^5.0.1",
     "lodash": "^2.4.1",
-    "morgan": "^1.2.3"
+    "morgan": "^1.2.3",
+    "request": "2.15.6"
   }
 }
