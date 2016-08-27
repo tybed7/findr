@@ -12,7 +12,7 @@ var jwtCheck = jwt({
 var pg = require('pg');
 
 pg.defaults.ssl = true;
-var connection = pg.connect(process.env.DATABASE_URL, function(err, client){
+pg.connect(process.env.DATABASE_URL, function(err, client){
   if(err) console.log("Error: "+err);
   console.log("Connected to postgres");
 });
@@ -24,7 +24,7 @@ var connection = pg.connect(process.env.DATABASE_URL, function(err, client){
     database: process.env.RDS_DB_NAME,
     port: process.env.RDS_PORT
 });*/
-connection.connect(function(err){
+/*connection.connect(function(err){
     if(err){
         console.error('error connecting: ' + err.stack);
         console.log(process.env.RDS_HOSTNAME);
@@ -32,7 +32,7 @@ connection.connect(function(err){
     }
     console.log('connected as id ' + connection.threadId);
     console.log(process.env.RDS_HOSTNAME);
-});
+});*/
 
 app.use('/api/protected', jwtCheck);
 
