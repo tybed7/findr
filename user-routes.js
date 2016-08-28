@@ -81,7 +81,7 @@ console.log("got here");
     console.log(jwtToken);
     
     var options = {
-      url: "http://localhost:8081/api/protected/users",
+      url: "https://nodefindr.herokuapp.com/api/protected/users",
       method: "POST",
       form:{fname: req.body.fname, lname: req.body.lname, authToken: req.body.authToken, refreshToken: req.body.refreshToken, id: req.body.id},
       headers:{

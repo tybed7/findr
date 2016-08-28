@@ -38,7 +38,7 @@ app.use(require('./user-routes'));
 var port = process.env.PORT || 8081;
 
 http.createServer(app).listen(port, function (err) {
-  console.log('listening in http://localhost:' + port);
+  console.log('listening in https://nodefindr.herokuapp.com:' + port);
 });
 
 

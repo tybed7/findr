@@ -44,7 +44,7 @@ app.get('/api/callback/', function(req,res){
   var requestToken = (req.url).split(/=|&/)[1];
   console.log("request token: "+requestToken);
     
-  request.post({url:'https://accounts.google.com/o/oauth2/token', form: {code:requestToken, client_id:process.env.clientId, client_secret: process.env.clientSecret, redirect_uri: "http://localhost:8081/api/callback", grant_type: "authorization_code"}}, function(error,res, body){
+  request.post({url:'https://accounts.google.com/o/oauth2/token', form: {code:requestToken, client_id:process.env.clientId, client_secret: process.env.clientSecret, redirect_uri: "https://nodefindr.herokuapp.com/api/callback", grant_type: "authorization_code"}}, function(error,res, body){
     if(error){
       console.log('upload failed:'+ error);
     }
@@ -67,7 +67,7 @@ app.get('/api/callback/', function(req,res){
         console.log(authData.lname);
         console.log(authData.authToken);
         console.log(authData.refreshToken);
-        request.post({url:'http://localhost:8081/users', form: {fname: authData.fname, lname: authData.lname, authToken: authData.authToken, refreshToken: authData.refreshToken, id: authData.google}}, function(error, res, body){
+        request.post({url:'https://nodefindr.herokuapp.com/users', form: {fname: authData.fname, lname: authData.lname, authToken: authData.authToken, refreshToken: authData.refreshToken, id: authData.google}}, function(error, res, body){
         console.log("got back to anon");
         
         console.log((!res.statusCode == 200));
@@ -130,7 +130,7 @@ app.get('/api/callback/', function(req,res){
 })
 
 app.post('/api/authToken',function(req,res){
-  request.post({url:'http://localhost:8081/users', form: {fname: authData.fname}})
+  request.post({url:'https://nodefindr.herokuapp.com/users', form: {fname: authData.fname}})
   res.status(200);
   res.send("Auth token: "+ authData.authToken+ "refresh token: "+authData.refreshToken+ "id: "+authData.google+"firstname: "+authData.fname+"lastname: "+authData.lname);
 })
@@ -144,7 +144,7 @@ app.get('/api/authToken',function(req,res){
 
 function getGoogleUrl(){
   var secret = new Object;
-  secret.url = "https://accounts.google.com/o/oauth2/auth?client_id="+process.env.clientId+"&redirect_uri=http://localhost:8081/api/callback&scope=https://www.googleapis.com/auth/plus.login+profile&approval_prompt=force&response_type=code&access_type=offline";
+  secret.url = "https://accounts.google.com/o/oauth2/auth?client_id="+process.env.clientId+"&redirect_uri=https://nodefindr.herokuapp.com/api/callback&scope=https://www.googleapis.com/auth/plus.login+profile&approval_prompt=force&response_type=code&access_type=offline";
   JSON.stringify(secret);
   return secret;
 }
