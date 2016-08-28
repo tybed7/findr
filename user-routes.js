@@ -10,6 +10,7 @@ var pg = require('pg');
 pg.defaults.ssl = true;
 var connection = pg.connect(process.env.DATABASE_URL, function(err, client){
   if(err) console.log("Error: "+err);
+  else
   console.log("Connected to postgres");
 });
 /*var connection = mysql.createConnection({

@@ -12,8 +12,9 @@ var jwtCheck = jwt({
 var pg = require('pg');
 
 pg.defaults.ssl = true;
-pg.connect(process.env.DATABASE_URL, function(err, client){
+var connection = pg.connect(process.env.DATABASE_URL, function(err, client){
   if(err) console.log("Error: "+err);
+  else
   console.log("Connected to postgres");
 });
 //yee yee scripts
