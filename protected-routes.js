@@ -12,11 +12,19 @@ var jwtCheck = jwt({
 var pg = require('pg');
 
 pg.defaults.ssl = true;
-var connection = pg.connect(process.env.DATABASE_URL, function(err, client){
-  if(err) console.log("Error: "+err);
-  else
-  console.log("Connected to postgres");
-});
+
+var config = {
+  user: process.env.RDS_USERNAME, //env var: PGUSER
+  database: process.env.RDS_DB_NAME, //env var: PGDATABASE
+  password: process.env.RDS_PASSWORD, //env var: PGPASSWORD
+  host: process.env.RDS_HOSTNAME, // Server hosting the postgres database
+  port: process.env.RDS_PORT, //env var: PGPORT
+  max: 10, // max number of clients in the pool
+  idleTimeoutMillis: 30000, // how long a client is allowed to remain idle before being closed
+};
+
+var pool = new pg.Pool(config);
+
 //yee yee scripts
 /*var connection = mysql.createConnection({
     host: process.env.RDS_HOSTNAME,
@@ -52,7 +60,25 @@ app.post("/api/protected/users",function(req,res){
         console.log(req.body.lname);
         console.log(req.body.authToken);
         console.log(req.body.refreshToken);
-    connection.query('INSERT INTO google (id, authtoken) VALUES ("'+req.body.id+'","'+req.body.authToken+'")', function(error,results){
+        
+    pool.connect(function(err, client, done) {
+  if (err) throw err;
+  console.log('Connected to postgres! Getting schemas...');
+
+ client.query('INSERT INTO google (id, authtoken) VALUES ("'+req.body.id+'","'+req.body.authToken+';', function(error, results){
+        if(error)
+    {
+    console.log("its an error1: " + error);
+    return res.status(400).send(callback(error,error));
+    }
+    else if(results){
+    console.log("it worked1: "+ results);
+    setUser(req);
+    }
+    });
+
+  });    
+    /*connection.query('INSERT INTO google (id, authtoken) VALUES ("'+req.body.id+'","'+req.body.authToken+'")', function(error,results){
     if(error)
     {
     console.log("its an error1: " + error);
@@ -62,33 +88,60 @@ app.post("/api/protected/users",function(req,res){
     console.log("it worked1: "+ results);
     setUser(req);
     }
+    */
     
     
-    });
 
 function setUser(req){
-  connection.query('INSERT INTO Users (firstname, lastname, google) VALUES ("'+req.body.fname+'","'+req.body.lname+'","'+req.body.id+'")', function(error,results){
-    if(error){
+  pool.connect(function(err, client, done) {
+  if (err) throw err;
+  console.log('Connected to postgres! Getting schemas...');
+
+ client.query('INSERT INTO Users (firstname, lastname, google) VALUES ("'+req.body.fname+'","'+req.body.lname+'","'+req.body.id+';', function(error, results){
+        if(error){
     return res.status(400).send(callback(error,error));
     }
     else if(results){
     console.log("it worked2: "+ results);
     return res.status(200).send(getUsers(results));
     }
+    });
+  
 })};
-
+pool.on('error', function (err, client) {
+  // if an error is encountered by a client while it sits idle in the pool
+  // the pool itself will emit an error event with both the error and
+  // the client which emitted the original error
+  // this is a rare occurrence but can happen if there is a network partition
+  // between your application and the database, the database restarts, etc.
+  // and so you might want to handle it and at least log it out
+  console.error('idle client error', err.message, err.stack)
+})
 });
 
 app.get("/api/protected/users",function(req,res){
+  pool.connect(function(err, client, done) {
+  if (err) throw err;
+  console.log('Connected to postgres! Getting schemas...');
 
-    connection.query('SELECT * FROM  `Users`', function(error,results){
-    if(error)
+ client.query('SELECT * FROM  `Users`', function(error, results){
+        if(error)
     console.log("its an error: " + error);
     else(results)
     console.log("it worked: "+ results);
     res.status(200).send(getUsers(results));
-    
+  
 });
+pool.on('error', function (err, client) {
+  // if an error is encountered by a client while it sits idle in the pool
+  // the pool itself will emit an error event with both the error and
+  // the client which emitted the original error
+  // this is a rare occurrence but can happen if there is a network partition
+  // between your application and the database, the database restarts, etc.
+  // and so you might want to handle it and at least log it out
+  console.error('idle client error', err.message, err.stack)
+})
+    
 });
 
 
@@ -128,3 +181,15 @@ function getUsers(results){
 function getId(){
   return secret = [process.env.clientId,process.env.clientSecret];
 }
+
+pool.on('error', function (err, client) {
+  // if an error is encountered by a client while it sits idle in the pool
+  // the pool itself will emit an error event with both the error and
+  // the client which emitted the original error
+  // this is a rare occurrence but can happen if there is a network partition
+  // between your application and the database, the database restarts, etc.
+  // and so you might want to handle it and at least log it out
+  console.error('idle client error', err.message, err.stack)
+})
+
+})
