@@ -60,8 +60,11 @@ app.post("/api/protected/users",function(req,res){
         console.log(req.body.lname);
         console.log(req.body.authToken);
         console.log(req.body.refreshToken);
+        console.log(config);
         
     pool.connect(function(err, client, done) {
+      
+        
   if (err) throw err;
   console.log('Connected to postgres! Getting schemas...');
 
