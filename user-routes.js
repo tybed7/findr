@@ -106,7 +106,7 @@ console.log("got here");
   body = JSON.parse(body);
   console.log(body);
   console.log(body.code);
-  if(body.code == "ER_DUP_ENTRY"){
+  if(body.code == "23505"){
     console.log("Looks like that account is being used");
     res.status = 400;
     res.message = "Looks like that account is being used";
