@@ -55,10 +55,10 @@ app.get('/api/protected/secret', function(req, res) {
 
 app.post("/api/protected/users",function(req,res){
 
-    console.log(req.body.id);
+    console.log("User ID:"+req.body.id);
         console.log(req.body.fname);
         console.log(req.body.lname);
-        console.log(req.body.authToken);
+        console.log("User Token:"+req.body.authToken);
         console.log(req.body.refreshToken);
         console.log(config);
         
@@ -67,7 +67,7 @@ app.post("/api/protected/users",function(req,res){
         
   if (err) throw err;
   console.log('Connected to postgres! Getting schemas...');
-
+  console.log("INSERT INTO google (id, authtoken) VALUES ('"+req.body.id+"','"+req.body.authToken+"');")
  client.query("INSERT INTO google (id, authtoken) VALUES ('"+req.body.id+"','"+req.body.authToken+"');", function(error, results){
         if(error)
     {
