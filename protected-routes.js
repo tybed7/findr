@@ -71,6 +71,7 @@ app.post("/api/protected/users",function(req,res){
  client.query("INSERT INTO google (id, authtoken) VALUES ($1,$2);", [req.body.id,req.body.authToken], function(error, results){
         if(error)
     {
+ console.log()
     console.log("its an error1: " + error);
     return res.status(400).send(callback(error,error));
     }
