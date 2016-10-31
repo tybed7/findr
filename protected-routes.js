@@ -68,7 +68,7 @@ app.post("/api/protected/users",function(req,res){
   if (err) throw err;
   console.log('Connected to postgres! Getting schemas...');
 
- client.query('INSERT INTO google (id, authtoken) VALUES ("'+req.body.id+'","'+req.body.authToken+';', function(error, results){
+ client.query("INSERT INTO google (id, authtoken) VALUES ('"+req.body.id+"','"+req.body.authToken+"';'", function(error, results){
         if(error)
     {
     console.log("its an error1: " + error);
