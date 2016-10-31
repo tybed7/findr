@@ -76,7 +76,7 @@ app.post("/api/protected/users",function(req,res){
     return res.status(400).send(callback(error,error));
     }
     else if(results){
-    console.log("it worked1: "+ results);
+    console.log("it worked1: "+ results.rows[0].id + " " + results.rows[0].authToken);
     setUser(req);
     }
     });
